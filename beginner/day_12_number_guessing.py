@@ -1,19 +1,27 @@
 import random
 
+EASY_LEVEL_ATTEMPTS = 8
+HARD_LEVEL_ATTEMPTS = 5
 
-def play_number_guessing():
-    print("Welcome to the Number Guessing")
-    print("I'm thinking of a number between 1 and 100")
-    number = random.randint(1, 100)
-    # print(f"Pssst, your number is: {number}")
+
+def set_difficulty():
     difficulty = input("Choose a difficulty. Type 'easy' or 'hard': \n").lower()
 
     attempts = 0
     if difficulty == "hard":
-        attempts = 7
+        attempts = HARD_LEVEL_ATTEMPTS
     elif difficulty == "easy":
-        attempts = 10
+        attempts = EASY_LEVEL_ATTEMPTS
+    return attempts
 
+
+def play_number_guessing():
+
+    print("Welcome to the Number Guessing")
+    print("I'm thinking of a number between 1 and 100")
+    number = random.randint(1, 100)
+
+    attempts = set_difficulty()
     while attempts > 0:
         print(f"You have {attempts} attempts to guess the number")
         guess = int(input("Make a guess\n"))

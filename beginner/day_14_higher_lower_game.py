@@ -26,17 +26,13 @@ def ask_who_has_more_followers(object1, object2):
 
 def play_higher_lower():
     game_data = data
-    print(game_data[0]['name'])
 
     has_user_guessed = True
+    global user_score
 
     while has_user_guessed:
-        print(len(game_data))
         object1 = get_entity_from_collection(game_data)
         object2 = get_entity_from_collection(game_data)
-        print(object1)
-        print(object2)
-        print(len(game_data))
 
         user_answer = ask_who_has_more_followers(object1, object2)
 
@@ -45,12 +41,12 @@ def play_higher_lower():
         else:
             right_answer = 'b'
         if user_answer == right_answer:
-            global user_score
             user_score += 1
             print(f"Correct! Your score is {user_score}")
         else:
             has_user_guessed = False
-            play_again = input(f"Sorry, you haven't guessed. Would you like to play again? y/n: ")
+            play_again = input(f"Sorry, you haven't guessed. Your final score is {user_score}. "
+                               f"Would you like to play again? y/n: ")
             if play_again == 'y':
                 play_higher_lower()
             else:

@@ -25,14 +25,12 @@ def ask_who_has_more_followers(object1, object2):
 
 
 def play_higher_lower():
-    # TODO-1 import the data source
     game_data = data
     print(game_data[0]['name'])
 
     has_user_guessed = True
 
     while has_user_guessed:
-        # TODO-2 parse dict, randomly getting comparing persons
         print(len(game_data))
         object1 = get_entity_from_collection(game_data)
         object2 = get_entity_from_collection(game_data)
@@ -40,11 +38,9 @@ def play_higher_lower():
         print(object2)
         print(len(game_data))
 
-        # TODO-4 ask user who has more followers
         user_answer = ask_who_has_more_followers(object1, object2)
 
-        # TODO-5 check the answer
-        if object1['follower_count'] > object2['follower_count']:
+        if int(object1['follower_count']) > int(object2['follower_count']):
             right_answer = 'a'
         else:
             right_answer = 'b'
@@ -59,13 +55,6 @@ def play_higher_lower():
                 play_higher_lower()
             else:
                 print("Goodbye!")
-
-
-
-
-    # TODO-6 if user won, ask the next question, score++
-
-    # TODO-7 if the user lost, ask if they want to try again
 
 
 if __name__ == '__main__':

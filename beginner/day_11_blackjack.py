@@ -1,5 +1,5 @@
 import random
-from beginner.utilities.art import blackjack_logo
+from utilities.art import blackjack_logo
 # Game logic: The dealer should keep drawing cards if their total is below 17,
 # and the player should be able to continue drawing cards until they choose to stand or their hand exceeds 21.
 

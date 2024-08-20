@@ -1,5 +1,5 @@
 import string
-from beginner.utilities.art import caesar_cipher_logo
+from utilities.art import caesar_cipher_logo
 
 
 def caesar():

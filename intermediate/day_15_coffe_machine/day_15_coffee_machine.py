@@ -78,8 +78,9 @@ class CoffeeMachine:
     def make_coffee(self, drink):
         self.water -= menu.MENU[drink]["ingredients"]["water"]
         self.coffee -= menu.MENU[drink]["ingredients"]["coffee"]
-        self.milk -= menu.MENU[drink]["ingredients"]["milk"]
-        self.print_report()
+        if drink != "espresso":
+            self.milk -= menu.MENU[drink]["ingredients"]["milk"]
+            self.print_report()
 
     def __str__(self):
         return (f"Water: {self.water}ml\n"

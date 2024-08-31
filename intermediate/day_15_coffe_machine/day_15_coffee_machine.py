@@ -9,9 +9,9 @@ def run_coffee_machine():
 
     if customer_choice in ["espresso", "latte", "cappuccino"]:
         coffee_machine.check_resources(customer_choice)
-        coffee_machine.process_coins()
-        coffee_machine.is_enough_money(customer_choice)
+        coffee_machine.process_coins(customer_choice)
         coffee_machine.make_coffee(customer_choice)
+        print(f"“Here is your {customer_choice}. Enjoy!”")
     elif customer_choice == "off":
         return
     elif customer_choice == "report":
@@ -38,6 +38,7 @@ class CoffeeMachine:
         print(self.__str__())
 
     def check_resources(self, drink: str):
+        self.print_report()
         if drink in ["latte", "cappuccino"]:
             milk_required = menu.MENU[drink]["ingredients"]["milk"]
             if self.milk < milk_required:
@@ -54,7 +55,7 @@ class CoffeeMachine:
             print("Sorry there is not enough coffee.")
             run_coffee_machine()
 
-    def process_coins(self):
+    def process_coins(self, drink):
         print("Please, insert coins")
         quarters = int(input("quarters ($0.25): "))
         dimes = int(input("dimes ($0.10): "))
@@ -62,23 +63,19 @@ class CoffeeMachine:
         pennies = int(input("pennies ($0.01): "))
         self.money = quarters * 0.25 + dimes * 0.10 + nickles * 0.05 + pennies * 0.01
         print(f"Money in Coffee Machine: ${str(self.money)}")
-        # b. Remember that quarters = $0.25, dimes = $0.10, nickles = $0.05, pennies = $0.01
-        # c. Calculate the monetary value of the coins inserted. E.g. 1 quarter, 2 dimes, 1 nickel, 2
-        # pennies = 0.25 + 0.1 x 2 + 0.05 + 0.01 x 2 = $0.52
 
-    def is_enough_money(self, drink):
-        if self.money < menu.MENU[drink]["cost"]:
+        drink_cost = menu.MENU[drink]["cost"]
+
+        if self.money < drink_cost:
             print("Sorry that's not enough money. Money refunded.")
             self.money = 0
             run_coffee_machine()
-            return False
-        elif self.money > menu.MENU[drink]["cost"]:
+        elif self.money > drink_cost:
             change = round(self.money - menu.MENU[drink]["cost"], 2)
             print(f"Here is ${change} dollars in change.")
-            self.money = 0
+            self.money += drink_cost
 
     def make_coffee(self, drink):
-        self.print_report()
         self.water -= menu.MENU[drink]["ingredients"]["water"]
         self.coffee -= menu.MENU[drink]["ingredients"]["coffee"]
         self.milk -= menu.MENU[drink]["ingredients"]["milk"]

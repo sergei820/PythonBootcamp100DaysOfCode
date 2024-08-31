@@ -86,7 +86,7 @@ class CoffeeMachine:
         return (f"Water: {self.water}ml\n"
                 f"Milk: {self.milk}ml\n"
                 f"Coffee: {self.coffee}g\n"
-                f"Money: ${self.money}")
+                f"Money: ${round(self.money, 2)}")
 
 
 if __name__ == "__main__":

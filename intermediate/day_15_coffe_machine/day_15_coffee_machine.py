@@ -9,7 +9,8 @@ def run_coffee_machine():
 
     if customer_choice in ["espresso", "latte", "cappuccino"]:
         coffee_machine.check_resources(customer_choice)
-        coffee_machine.process_coins(customer_choice)
+        coffee_machine.process_coins()
+        coffee_machine.check_if_money_enough(customer_choice)
         coffee_machine.make_coffee(customer_choice)
         print(f"“Here is your {customer_choice}. Enjoy!”")
     elif customer_choice == "off":
@@ -55,15 +56,17 @@ class CoffeeMachine:
             print("Sorry there is not enough coffee.")
             run_coffee_machine()
 
-    def process_coins(self, drink):
+    def process_coins(self):
+        """Calculates the total sum, sets the amount of money to the coffe machine"""
         print("Please, insert coins")
-        quarters = int(input("quarters ($0.25): "))
-        dimes = int(input("dimes ($0.10): "))
-        nickles = int(input("nickles ($0.05): "))
-        pennies = int(input("pennies ($0.01): "))
-        self.money = quarters * 0.25 + dimes * 0.10 + nickles * 0.05 + pennies * 0.01
+        self.money += int(input("quarters: ")) * 0.25
+        self.money += int(input("dimes: ")) * 0.10
+        self.money += int(input("nickles: ")) * 0.05
+        self.money += int(input("pennies: ")) * 0.01
+
         print(f"Money in Coffee Machine: ${str(self.money)}")
 
+    def check_if_money_enough(self, drink):
         drink_cost = menu.MENU[drink]["cost"]
 
         if self.money < drink_cost:

@@ -15,6 +15,7 @@ def run_coffee_machine():
         return
     elif user_choice == "report":
         coffee_maker.report()
+        money_machine.report()
         run_coffee_machine()
     elif user_choice in menu.get_items():
         drink = menu.find_drink(user_choice)
@@ -22,10 +23,7 @@ def run_coffee_machine():
         print("There is no item with that name.")
         run_coffee_machine()
 
-    if not coffee_maker.is_resource_sufficient(drink):
-        run_coffee_machine()
-
-    if not money_machine.make_payment(drink.cost):
+    if not coffee_maker.is_resource_sufficient(drink) or not money_machine.make_payment(drink.cost):
         run_coffee_machine()
 
     coffee_maker.make_coffee(drink)

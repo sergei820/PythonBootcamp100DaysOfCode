@@ -46,6 +46,11 @@ def start_game():
             ball.reset_position()
             scoreboard.r_point()
 
+        if scoreboard.l_score >= 5:
+            game_is_on = False
+        elif scoreboard.l_score >= 5:
+            game_is_on = False
+
 
     screen.exitonclick()
 

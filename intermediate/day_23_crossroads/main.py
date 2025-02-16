@@ -17,14 +17,12 @@ def start_app():
     screen.listen()
     screen.onkey(player.go_up, "Up")
     car_manager = CarManager()
-    counter = 0
 
     game_is_on = True
     while game_is_on:
         time.sleep(0.1)
-        counter += 1
-        if counter % 80:
-            car_manager.generate_car()
+
+        car_manager.generate_car()
 
         for car in car_manager.cars:
             car.move()
@@ -32,13 +30,13 @@ def start_app():
         screen.update()
 
         for car in car_manager.cars:
-            if player.distance(car) < 10:
-                print("Car accident")
+            if player.distance(car) < 20:
+                scoreboard.game_over()
                 game_is_on = False
 
         if player.ycor() >= FINISH_LINE_Y:
             player.reset_position()
-            scoreboard.score += 1
+            scoreboard.level += 1
             scoreboard.update_scoreboard()
             car_manager.increase_speed()
 

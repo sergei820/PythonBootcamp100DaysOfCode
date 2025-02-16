@@ -13,8 +13,10 @@ class CarManager:
         self.cars_speed = STARTING_MOVE_DISTANCE
 
     def generate_car(self):
-        car = Car(self.cars_speed)
-        self.cars.append(car)
+        random_chance = randint(0, 4)
+        if random_chance == 1:
+            car = Car(self.cars_speed)
+            self.cars.append(car)
 
     def increase_speed(self):
         self.cars_speed += MOVE_INCREMENT

@@ -12,7 +12,7 @@ class CarManager:
         self.cars = []
         self.cars_speed = STARTING_MOVE_DISTANCE
 
-    def generate_cars(self):
+    def generate_car(self):
         car = Car(self.cars_speed)
         self.cars.append(car)
 
@@ -28,7 +28,7 @@ class Car(Turtle):
         self.color(COLORS[randint(0, len(COLORS)-1)])
         self.penup()
         self.setheading(180)
-        self.goto(300, randint(-260, 280))
+        self.goto(300, randint(-250, 270))
         self.car_speed = car_speed
 
     def move(self):

@@ -49,6 +49,7 @@ def parse_csv(file_path: str):
     print(data)
     data.to_csv("new_csv.csv")
 
+    result_dict = {'color', ''}
 
     # return temperatures
 

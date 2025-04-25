@@ -16,7 +16,7 @@ def start_app():
 
     answered_states = []
     data = pandas.read_csv(file_us_states)
-    states_list = list(data.state)
+    states_list = data.state.to_list()
 
     while len(answered_states) < 50:
 
@@ -25,14 +25,14 @@ def start_app():
             prompt="What's another state's name?"
         ))
 
-        if answer_state is None:
+        if answer_state is None or answer_state == "Exit":
             break
         else:
             answer_state = answer_state.title()
 
         if answer_state in states_list:
             state_row = data[data.state == answer_state]
-            t_text.goto(float(state_row.x.iloc[0]), float(state_row.y.iloc[0]))
+            t_text.goto(float(state_row.x.item()), float(state_row.y.item()))
             t_text.write(answer_state, align="center", font=("Arial", 8, "normal"))
             if answer_state not in answered_states:
                 answered_states.append(answer_state)

@@ -1,4 +1,4 @@
-
+import random
 
 def start_app():
     my_list = [1, 2, 3]
@@ -36,6 +36,26 @@ def start_app():
     result = [int(i.replace('\n', '')) for i in list_1 if i in list_2]
 
     print(f"Exercise 3: {result}")
+
+    # Dict comprehension
+    student_score_dict = {student:random.randint(1, 100) for student in names}
+    print(student_score_dict)
+
+    good_students_scores = {student:score for (student, score) in student_score_dict.items() if score >= 60}
+    print(good_students_scores)
+
+
+    # Exercise 4
+    sentence = "What is the Airspeed Velocity of an Unladen Swallow?"
+    result = {word: len(word) for word in sentence.split(' ')}
+    print(f"Exercise 4: {result}")
+
+    # Exercise 5
+    weather_c = {"Monday": 12, "Tuesday": 14, "Wednesday": 15, "Thursday": 14, "Friday": 21, "Saturday": 22,
+                 "Sunday": 24}
+
+    weather_f = {day:((temp_c * 9/5) + 32) for (day, temp_c) in weather_c.items()}
+    print(f"Exercise 5: {weather_f}")
 
 
 if __name__ == "__main__":

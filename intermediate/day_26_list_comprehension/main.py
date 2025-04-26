@@ -1,4 +1,6 @@
 import random
+import pandas
+
 
 def start_app():
     my_list = [1, 2, 3]
@@ -56,6 +58,28 @@ def start_app():
 
     weather_f = {day:((temp_c * 9/5) + 32) for (day, temp_c) in weather_c.items()}
     print(f"Exercise 5: {weather_f}")
+
+    names = []
+    scores = []
+
+    for (key, value) in student_score_dict.items():
+        names.append(key)
+        scores.append(value)
+
+    new_st_sc_dict = {
+        "student": names,
+        "score": scores
+    }
+
+    student_data_frame = pandas.DataFrame(new_st_sc_dict)
+    print(student_data_frame)
+
+    # Loop through rows of a data frame
+    for (index, row) in student_data_frame.iterrows():
+        if row.student == "Dave":
+            print(row.score)
+
+
 
 
 if __name__ == "__main__":

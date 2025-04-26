@@ -18,7 +18,7 @@ def start_app():
     t_text.penup()
 
     answered_states = []
-    list_to_learn = []
+    states_to_learn = []
 
     data = pandas.read_csv(file_us_states)
     all_states_list = data.state.to_list()
@@ -33,10 +33,15 @@ def start_app():
         if answer_state is None or answer_state == "Exit":
             for state in all_states_list:
                 if state not in answered_states:
-                    state_row = data[data.state == state]
-                    list_to_learn.append({'state': str(state_row.state), 'x': float(state_row.x), 'y': float(state_row.y)})
-                    data_to_learn = pandas.DataFrame(list_to_learn)
+                    # state_row = data[data.state == state]
+                    # states_to_learn.append(
+                    #     {'state': str(state_row.state), 'x': float(state_row.x), 'y': float(state_row.y)}
+                    # )
+                    states_to_learn.append(state)
+                    print(states_to_learn)
+                    data_to_learn = pandas.DataFrame(states_to_learn)
                     data_to_learn.to_csv('states_to_learn.csv')
+
             break
         else:
             answer_state = answer_state.title()

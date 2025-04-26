@@ -1,8 +1,11 @@
 import turtle
 import pandas
 
+file_us_states = '50_states.csv'
+states_to_learn = 'states_to_learn.csv'
+
+
 def start_app():
-    file_us_states = '50_states.csv'
     screen = turtle.Screen()
     screen.title("U.S. States Game")
 
@@ -15,8 +18,10 @@ def start_app():
     t_text.penup()
 
     answered_states = []
+    list_to_learn = []
+
     data = pandas.read_csv(file_us_states)
-    states_list = data.state.to_list()
+    all_states_list = data.state.to_list()
 
     while len(answered_states) < 50:
 
@@ -26,11 +31,17 @@ def start_app():
         ))
 
         if answer_state is None or answer_state == "Exit":
+            for state in all_states_list:
+                if state not in answered_states:
+                    state_row = data[data.state == state]
+                    list_to_learn.append({'state': str(state_row.state), 'x': float(state_row.x), 'y': float(state_row.y)})
+                    data_to_learn = pandas.DataFrame(list_to_learn)
+                    data_to_learn.to_csv('states_to_learn.csv')
             break
         else:
             answer_state = answer_state.title()
 
-        if answer_state in states_list:
+        if answer_state in all_states_list:
             state_row = data[data.state == answer_state]
             t_text.goto(float(state_row.x.item()), float(state_row.y.item()))
             t_text.write(answer_state, align="center", font=("Arial", 8, "normal"))

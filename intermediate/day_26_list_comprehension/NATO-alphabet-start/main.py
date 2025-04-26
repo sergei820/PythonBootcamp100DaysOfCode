@@ -1,27 +1,38 @@
-student_dict = {
-    "student": ["Angela", "James", "Lily"], 
-    "score": [56, 76, 98]
-}
-
-#Looping through dictionaries:
-for (key, value) in student_dict.items():
-    #Access key and value
-    pass
-
 import pandas
-student_data_frame = pandas.DataFrame(student_dict)
-
-#Loop through rows of a data frame
-for (index, row) in student_data_frame.iterrows():
-    #Access index and row
-    #Access row.student or row.score
-    pass
 
 # Keyword Method with iterrows()
 # {new_key:new_value for (index, row) in df.iterrows()}
 
-#TODO 1. Create a dictionary in this format:
-{"A": "Alfa", "B": "Bravo"}
+# 1. Create a dictionary in this format
+# {"A": "Alfa", "B": "Bravo"}
 
-#TODO 2. Create a list of the phonetic code words from a word that the user inputs.
+def apply_nato_alphabet():
+    nato_alphabet_dict = {}
+    # WITHOUT PANDAS
+    # with open("nato_phonetic_alphabet.csv", 'r') as file:
+    #     rows_list = file.readlines()
+    #
+    # for row in rows_list:
+    #     if row.split(',')[0] == 'letter':
+    #         continue
+    #     result_dict[row.split(',')[0]]=row.split(',')[1].replace('\n','')
 
+    # WITH PANDAS
+    my_data_frame = pandas.read_csv("nato_phonetic_alphabet.csv")
+    for (index, row) in my_data_frame.iterrows():
+        nato_alphabet_dict[row.letter] = row.code
+    print(nato_alphabet_dict)
+
+
+    # 2. Create a list of the phonetic code words from a word that the user inputs
+    user_input = input("Enter a word: ")
+
+    input_nato_alphabet_applied = []
+
+    for letter in user_input:
+        input_nato_alphabet_applied.append(nato_alphabet_dict[letter.upper()])
+
+    print(input_nato_alphabet_applied)
+
+if __name__ == "__main__":
+    apply_nato_alphabet()

@@ -1,8 +1,13 @@
 
 def start_app():
     # FileNotFoundError
-    # with open("a_file.txt", "r") as file:
-    #     file.read()
+    try:
+        file = open("a_file.txt", "r")
+        a_dict = {"key": "value"}
+        value = a_dict["non_existing_key"]
+    except FileNotFoundError:
+        file = open("a_file.txt", "w")
+        file.write("Something")
 
     # KeyError
     # a_dict = {"key": "value"}
@@ -13,7 +18,7 @@ def start_app():
     # a_list[4]
 
     # TypeError
-    print("some text" + 3)
+    # print("some text" + 3)
 
 
 if __name__ == "__main__":

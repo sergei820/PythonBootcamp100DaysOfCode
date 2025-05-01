@@ -45,19 +45,51 @@ def start_app():
             if is_ok:
                 pyperclip.copy(password)
                 print("password copied to clipboard")
-                with open(file_name, "r") as file:
-                    # Reading old data
-                    data = json.load(file)
-                    # Updating old data
-                    data.update(new_data)
-                with open(file_name, "w") as file:
-                    # Saving the updated data
-                    json.dump(new_data, file, indent=4)
-                    print(data)
+                try:
+                    with open(file_name, "r") as data_file:
+                        data = json.load(data_file)  # Reading old data
+                        # data.update(new_data)  # Updating old data
+                except FileNotFoundError:
+                    # with open(file_name, "w") as data_file:
+                    #     json.dump(new_data, data_file, indent=4)
+                    data = {}
+                data.update(new_data)  # Updating old data
+                with open(file_name, "w") as data_file:
+                    json.dump(data, data_file, indent=4)  # Saving the updated data
+
                 website_input.delete(0, END)
                 password_input.delete(0, END)
                 # messagebox.showinfo("Your password is saved and copied to the clipboard!")
                 website_input.focus()
+
+    # ---------------------------- FIND PASSWORD ------------------------------- #
+    def find_password():
+        website = website_input.get()
+
+        with open(file_name, "r") as data_file:
+            data = json.load(data_file)
+            try:
+                email = data[website].get("email")
+                password = data[website].get("password")
+                messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+            except FileNotFoundError:
+                messagebox.showerror(title="Error", message="No data file found")
+            except KeyError:
+                messagebox.showerror(title="Error", message="No details for the website exists")
+
+        # BEST OPTION
+        try:
+            with open(file_name, "r") as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            messagebox.showerror(title="Error", message="No data file found")
+        else:
+            if website in data:  # it's better to use if/else then exceptions if possible
+                email = data[website].get("email")
+                password = data[website].get("password")
+                messagebox.showinfo(title=website, message=f"Email: {email}\nPassword: {password}")
+            else:
+                messagebox.showerror(title="Error", message="No details for the website exists")
 
     # ---------------------------- UI SETUP ------------------------------- #
     window = Tk()
@@ -69,7 +101,7 @@ def start_app():
     canvas.create_image(100, 100, image=logo_img)
     canvas.grid(row=0, column=1)  # To make an element using 2 columns - use 'columnspan'
 
-    website_label = Label(text="Website:")
+    website_label = Label(text="Website:", width=21)
     website_label.grid(row=1, column=0)
 
     username_label = Label(text="Email / Username:")
@@ -78,9 +110,12 @@ def start_app():
     password_label = Label(text="Password:")
     password_label.grid(row=3, column=0)
 
-    website_input = Entry(width=40)
-    website_input.grid(row=1, column=1, columnspan=2)
+    website_input = Entry(width=21)
+    website_input.grid(row=1, column=1)
     website_input.focus()
+
+    search_button = Button(text="Search", width=14, command=find_password)
+    search_button.grid(row=1, column=2)
 
     email_input = Entry(width=40)
     email_input.grid(row=2, column=1, columnspan=2)

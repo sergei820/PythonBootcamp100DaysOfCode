@@ -10,12 +10,12 @@ wrong_answer_path = "/images/card_back.png"
 def start_app():
     window = Tk()
     window.title("Flash Cards App")
-    window.config(padx=30, pady=30)
+    window.config(padx=50, pady=50)
 
-    canvas = Canvas(width=800, height=500)
+    canvas = Canvas(width=1000, height=700, background=BACKGROUND_COLOR)
     logo_img = PhotoImage(file=card_front_path)
-    canvas.create_image(300, 200, image=logo_img)
-    canvas.grid(row=0, column=1)
+    canvas.create_image(500, 326, image=logo_img)
+    canvas.grid(row=0, column=0, columnspan=2)
 
 
 

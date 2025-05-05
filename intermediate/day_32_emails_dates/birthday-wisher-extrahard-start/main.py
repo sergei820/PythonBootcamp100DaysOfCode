@@ -45,10 +45,11 @@ def start_app():
 
     # 2. Check if today matches a birthday in the birthdays.csv
     with open("birthdays.csv", "r") as birthdays_file:
-        reader = csv.DictReader(birthdays_file)
-        for row in reader:
-            if int(row["day"]) == today_day and int(row["month"]) == today_month:
-                send_email(row["email"],prepare_message(row["name"]))
+        birthdays_reader = csv.DictReader(birthdays_file)
+
+    for row in birthdays_reader:
+        if int(row["day"]) == today_day and int(row["month"]) == today_month:
+            send_email(row["email"],prepare_message(row["name"]))
 
 
 if __name__ == "__main__":

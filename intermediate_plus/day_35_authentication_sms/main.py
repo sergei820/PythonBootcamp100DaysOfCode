@@ -42,7 +42,7 @@ def send_sms(message_text: str):
     client = Client(twilio_account_sid, twilio_auth_token)
     message = client.messages.create(
         from_=twilio_trial_number,
-        messaging_service_sid='MG3f31d40b9a8fa6ea59893981b4b3458f',
+        messaging_service_sid=twilio_account_sid,
         body=message_text,
         to=my_phone
     )

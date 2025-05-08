@@ -1,4 +1,5 @@
 import os
+from email.mime.text import MIMEText
 
 import requests
 from datetime import datetime, timedelta
@@ -79,18 +80,19 @@ def collect_stock_data():
 
             ## STEP 3: Send a message with the percentage change and each article's title and description
             message = f"{STOCK}: {sign}\nHeadline: {article["title"]}\nBrief: {article["description"]}\n\n"
-            # send_email(ADDR_TO, message)
+            send_email(ADDR_TO, message)
 
 
 
 def send_email(to_addrs: str, message: str):
+    mime_message = MIMEText(message, _charset="utf-8").as_string()
     with smtplib.SMTP(mail_host, port=mail_port) as connection:
         connection.starttls()
         connection.login(user=EMAIL, password=PASSWORD)
         connection.sendmail(
             from_addr=EMAIL,
             to_addrs=to_addrs,
-            msg=message
+            msg=mime_message
         )
 
 

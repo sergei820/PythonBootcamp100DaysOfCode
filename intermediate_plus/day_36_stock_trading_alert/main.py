@@ -1,5 +1,4 @@
 import os
-from smtplib import _fix_eols
 
 import requests
 from datetime import datetime, timedelta
@@ -68,6 +67,7 @@ def collect_stock_data():
 
     if abs(price_increase) > d_b_y_open_price * 0.005:
         news_response = requests.get(news_endpoint, news_params)
+        # Optional: Format the SMS message like this: - DONE
         if price_increase > 0:
             sign = f"🔺"
         else:
@@ -76,14 +76,13 @@ def collect_stock_data():
             print(f"{STOCK}: {percent_price_change_abs}")
             print(f"Headline: {article["title"]}")
             print(f"Brief: {article["description"]}\n")
-            message = f"{STOCK}: {sign}\nHeadline: {article["title"]}\nBrief: {article["description"]}\n\n"
 
+            ## STEP 3: Send a message with the percentage change and each article's title and description
+            message = f"{STOCK}: {sign}\nHeadline: {article["title"]}\nBrief: {article["description"]}\n\n"
             # send_email(ADDR_TO, message)
 
 
 
-    ## STEP 3: Use https://www.twilio.com
-    # Send a seperate message with the percentage change and each article's title and description to your phone number.
 def send_email(to_addrs: str, message: str):
     with smtplib.SMTP(mail_host, port=mail_port) as connection:
         connection.starttls()
@@ -93,17 +92,6 @@ def send_email(to_addrs: str, message: str):
             to_addrs=to_addrs,
             msg=message
         )
-
-    #Optional: Format the SMS message like this: - DONE
-    """
-    TSLA: 🔺2%
-    Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-    Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-    or
-    "TSLA: 🔻5%
-    Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-    Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-    """
 
 
 if __name__ == "__main__":

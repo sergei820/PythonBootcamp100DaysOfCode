@@ -48,7 +48,7 @@ def start_app():
 
     post_pixel_body = {
         "date": today.strftime("%Y%m%d"),  # "20250509",
-        "quantity": "1"
+        "quantity": input("How many kilometers did you run today?")
     }
     # response = requests.post(url=pixel_endpoint, json=post_pixel_body, headers=headers)
     # print(response.text)

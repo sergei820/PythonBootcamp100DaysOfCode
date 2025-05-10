@@ -7,9 +7,24 @@ load_dotenv()
 APP_ID = environ.get("NUTRITIONIX_APP_ID")
 API_KEY = environ.get("NUTRITIONIX_API_KEY")
 
-def start_app():
-    print(API_KEY)
+domain = "https://trackapi.nutritionix.com/"
+endpoint = "v2/natural/exercise"
 
+def start_app():
+    user_info = input("Tell me the exercise you did: ")
+
+    headers = {
+        'Content-Type': 'application/json',
+        'x-app-id': APP_ID,
+        'x-app-key': API_KEY,
+    }
+    body = {
+        "query": "swam for 1 hour"
+    }
+
+    response = requests.post(url=domain+endpoint, headers=headers, json=body)
+    response.raise_for_status()
+    print(response.text)
 
 
 if __name__ == "__main__":

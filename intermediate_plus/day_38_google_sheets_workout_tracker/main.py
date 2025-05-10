@@ -11,7 +11,7 @@ domain = "https://trackapi.nutritionix.com/"
 endpoint = "v2/natural/exercise"
 
 def start_app():
-    user_info = input("Tell me the exercise you did: ")
+    user_input = input("Tell me the exercise you did: ")
 
     headers = {
         'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ def start_app():
         'x-app-key': API_KEY,
     }
     body = {
-        "query": "swam for 1 hour"
+        "query": user_input,
     }
 
     response = requests.post(url=domain+endpoint, headers=headers, json=body)

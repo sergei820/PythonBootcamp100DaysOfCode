@@ -15,7 +15,6 @@ def start_app():
     sheety_headers = {
         "Authorization": sheety_bearer_auth_token,
     }
-    print(sheety_bearer_auth_token)
     response = requests.get(sheety_endpoint, headers=sheety_headers)
     print(response.text)
 

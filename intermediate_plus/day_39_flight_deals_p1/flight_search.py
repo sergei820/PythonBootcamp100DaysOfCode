@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from os import environ
 from dotenv import load_dotenv
 import requests
@@ -5,6 +6,9 @@ import requests
 load_dotenv()
 
 get_cities_endpoint = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
+get_flight_offers_endpoint = "https://test.api.amadeus.com/v2/shopping/flight-offers"
+
+originLocationCode = "LON"
 
 class FlightSearch:
     """ This class is responsible for talking to the Flight Search API """
@@ -42,8 +46,28 @@ class FlightSearch:
         body = {
             'grant_type': 'client_credentials',
             'client_id': self._api_key,
-            'client_secret': self._api_secret
+            'client_secret': self._api_secret,
         }
         response = requests.post(url=token_endpoint, headers=header, data=body)
 
         return response.json()["access_token"]
+
+    def search_flight_offers(self, iata_code: str):
+        departure_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")  # 2017-12-25
+        headers = {
+            "Authorization": f"Bearer {self._token}"
+        }
+        params = {
+            "originLocationCode": originLocationCode,
+            "destinationLocationCode": iata_code,
+            "departureDate": departure_date,
+            "nonStop": "true",
+            "adults": "1",
+            "currencyCode": "GBP",
+        }
+        # print(params)
+        response = requests.get(url=get_flight_offers_endpoint, headers=headers, params=params)
+        # print(response.status_code)
+        # print(response.text)
+
+        return response.json()

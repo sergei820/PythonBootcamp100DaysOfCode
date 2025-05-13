@@ -4,6 +4,8 @@ import requests
 
 load_dotenv()
 
+get_cities_endpoint = "https://test.api.amadeus.com/v1/reference-data/locations/cities"
+
 class FlightSearch:
     """ This class is responsible for talking to the Flight Search API """
     def __init__(self):
@@ -18,10 +20,19 @@ class FlightSearch:
         :param city: str
         :return: iata_code: str
         """
-        print(city)
-        print(f"self._get_new_token(): {self._get_new_token()}")
+        headers = {
+            "Authorization": f"Bearer {self._token}"
+        }
+        params = {
+            "keyword": city,
+            "max": "1"
+        }
+        response = requests.get(url=get_cities_endpoint, headers=headers, params=params)
+        response.raise_for_status()
 
-        return 'TESTING'
+        iata_code = response.json()["data"][0]["iataCode"]
+
+        return iata_code
 
     def _get_new_token(self):
         token_endpoint = "https://test.api.amadeus.com/v1/security/oauth2/token"

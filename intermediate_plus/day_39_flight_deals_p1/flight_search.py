@@ -65,9 +65,6 @@ class FlightSearch:
             "adults": "1",
             "currencyCode": "GBP",
         }
-        # print(params)
         response = requests.get(url=get_flight_offers_endpoint, headers=headers, params=params)
-        # print(response.status_code)
-        # print(response.text)
 
         return response.json()

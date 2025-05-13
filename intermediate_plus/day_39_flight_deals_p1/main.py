@@ -1,9 +1,6 @@
-
-
 from intermediate_plus.day_39_flight_deals_p1.data_manager import DataManager
+from intermediate_plus.day_39_flight_deals_p1.flight_data import FlightData
 from intermediate_plus.day_39_flight_deals_p1.flight_search import FlightSearch
-
-
 
 
 def start_app():
@@ -16,6 +13,7 @@ def start_app():
     sheet_data = data_manager.get_google_doc_data()
 
     flight_search = FlightSearch()
+    flight_data = FlightData()
 
     for flight in sheet_data["page1"]:
         if flight["iataCode"] == "":
@@ -23,23 +21,12 @@ def start_app():
             data_manager.update_google_doc_record(flight)
 
         flight_offers = flight_search.search_flight_offers(flight["iataCode"])
+        min_price = flight_data.find_cheapest_flight(flight_offers)
 
-        try:
-            min_price = flight_offers["data"][0]["travelerPricings"][0]["price"]["total"]
-            for data in flight_offers["data"]:
-                price = data["travelerPricings"][0]["price"]["total"]
-                if min_price > price:
-                    min_price = price
-        except IndexError:
-            min_price = "N/A"
         print(f"Getting flights for {flight["city"]}...")
         print(f"{flight["city"]}: £{min_price}")
 
 
-    # Getting flights for {city}...
-    # {city}: £{price}
-
-    # print(sheet_data["page1"])
 
 
 

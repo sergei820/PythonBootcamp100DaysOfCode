@@ -16,7 +16,6 @@ class DataManager:
             "Authorization": sheety_bearer_auth_token,
         }
         sheet_data = requests.get(sheety_endpoint, headers=sheety_headers)
-        # print(sheet_data.text)
         return sheet_data.json()
 
     def update_google_doc_record(self, record) -> None:

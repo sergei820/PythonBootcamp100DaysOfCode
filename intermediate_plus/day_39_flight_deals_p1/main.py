@@ -2,21 +2,31 @@ from os import environ
 from dotenv import load_dotenv
 import requests
 
+from intermediate_plus.day_39_flight_deals_p1.data_manager import DataManager
+from intermediate_plus.day_39_flight_deals_p1.flight_search import FlightSearch
+
 load_dotenv()
 
 #This file will need to use the DataManager,FlightSearch, FlightData, NotificationManager classes to achieve the program requirements.
 
-sheety_project_id = environ.get("FLIGHT_SEARCH_GOOGLE_DOC_ID")
-sheety_page_name = "page1"
-sheety_endpoint = f"https://api.sheety.co/{sheety_project_id}/flightDeals/{sheety_page_name}"
-sheety_bearer_auth_token = environ.get("SHEETY_BEARER_AUTH_TOKEN")
+
 
 def start_app():
-    sheety_headers = {
-        "Authorization": sheety_bearer_auth_token,
-    }
-    response = requests.get(sheety_endpoint, headers=sheety_headers)
-    print(response.text)
+    data_manager = DataManager()
+    sheet_data = data_manager.get_google_doc_data()
+    print(sheet_data["page1"])
+
+    flight_search = FlightSearch()
+
+    for flight in sheet_data["page1"]:
+        if flight["iataCode"] == "":
+            flight["iataCode"] = flight_search.get_iata_code(flight["city"])
+            data_manager.update_google_doc_record(flight)
+
+
+    print(sheet_data["page1"])
+
+
 
 if __name__ == "__main__":
     start_app()

@@ -17,7 +17,7 @@ def start_app():
     flight_data = FlightData()
     notification_manager = NotificationManager()
 
-    for flight in sheet_data["page1"]:
+    for flight in sheet_data["prices"]:
         if flight["iataCode"] == "":
             flight["iataCode"] = flight_search.get_iata_code(flight["city"])
             data_manager.update_google_doc_record(flight)

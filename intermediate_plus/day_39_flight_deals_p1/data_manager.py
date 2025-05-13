@@ -5,7 +5,7 @@ import requests
 load_dotenv()
 
 sheety_project_id = environ.get("FLIGHT_SEARCH_GOOGLE_DOC_ID")
-sheety_page_name = "page1"
+sheety_page_name = "prices"
 sheety_endpoint = f"https://api.sheety.co/{sheety_project_id}/flightDeals/{sheety_page_name}"
 sheety_bearer_auth_token = environ.get("SHEETY_BEARER_AUTH_TOKEN")
 
@@ -22,5 +22,5 @@ class DataManager:
         sheety_headers = {
             "Authorization": sheety_bearer_auth_token,
         }
-        response = requests.put(f"{sheety_endpoint}/{record["id"]}", headers=sheety_headers, json={"page1": record})
+        response = requests.put(f"{sheety_endpoint}/{record["id"]}", headers=sheety_headers, json={"prices": record})
         print(response.text)

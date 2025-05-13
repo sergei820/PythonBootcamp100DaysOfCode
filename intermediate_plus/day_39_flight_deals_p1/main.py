@@ -1,17 +1,17 @@
-from os import environ
-from dotenv import load_dotenv
-import requests
+
 
 from intermediate_plus.day_39_flight_deals_p1.data_manager import DataManager
 from intermediate_plus.day_39_flight_deals_p1.flight_search import FlightSearch
 
-load_dotenv()
-
-#This file will need to use the DataManager,FlightSearch, FlightData, NotificationManager classes to achieve the program requirements.
 
 
 
 def start_app():
+    """
+    #This file will need to use the DataManager,FlightSearch, FlightData, NotificationManager classes
+    to achieve the program requirements.
+    :return:
+    """
     data_manager = DataManager()
     sheet_data = data_manager.get_google_doc_data()
     print(sheet_data["page1"])

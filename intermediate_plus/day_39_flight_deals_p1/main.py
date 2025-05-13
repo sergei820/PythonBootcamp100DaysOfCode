@@ -1,6 +1,7 @@
 from intermediate_plus.day_39_flight_deals_p1.data_manager import DataManager
 from intermediate_plus.day_39_flight_deals_p1.flight_data import FlightData
 from intermediate_plus.day_39_flight_deals_p1.flight_search import FlightSearch
+from intermediate_plus.day_39_flight_deals_p1.notification_manager import NotificationManager, ADDR_TO
 
 
 def start_app():
@@ -14,6 +15,7 @@ def start_app():
 
     flight_search = FlightSearch()
     flight_data = FlightData()
+    notification_manager = NotificationManager()
 
     for flight in sheet_data["page1"]:
         if flight["iataCode"] == "":
@@ -25,6 +27,11 @@ def start_app():
 
         print(f"Getting flights for {flight["city"]}...")
         print(f"{flight["city"]}: £{min_price}")
+
+        if min_price != 'N/A' and float(min_price) < flight['lowestPrice']:
+            message = f"Low Price alert! Flight to {flight["city"]}: £{min_price}"
+            print(message)
+            notification_manager.send_email(ADDR_TO, message)
 
 
 

@@ -53,7 +53,7 @@ class FlightSearch:
         return response.json()["access_token"]
 
     def search_flight_offers(self, iata_code: str):
-        departure_date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")  # 2017-12-25
+        departure_date = (datetime.now() + timedelta(days=180)).strftime("%Y-%m-%d")  # 2017-12-25
         headers = {
             "Authorization": f"Bearer {self._token}"
         }

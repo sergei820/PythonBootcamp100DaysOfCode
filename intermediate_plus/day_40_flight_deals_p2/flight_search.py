@@ -52,7 +52,12 @@ class FlightSearch:
 
         return response.json()["access_token"]
 
-    def search_flight_offers(self, iata_code: str):
+    def search_flight_offers(self, iata_code: str, flight_without_stops = "true") -> dict:
+        """
+        :param iata_code:
+        :param flight_without_stops: str "true" / "false
+        :return:
+        """
         departure_date = (datetime.now() + timedelta(days=180)).strftime("%Y-%m-%d")  # 2017-12-25
         headers = {
             "Authorization": f"Bearer {self._token}"
@@ -61,7 +66,7 @@ class FlightSearch:
             "originLocationCode": originLocationCode,
             "destinationLocationCode": iata_code,
             "departureDate": departure_date,
-            "nonStop": "true",
+            "nonStop": flight_without_stops,
             "adults": "1",
             "currencyCode": "GBP",
         }

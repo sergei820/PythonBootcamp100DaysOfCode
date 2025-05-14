@@ -9,7 +9,7 @@ class FlightData:
                 price = data["travelerPricings"][0]["price"]["total"]
                 if min_price > price:
                     min_price = price
-        except IndexError:
+        except (IndexError, KeyError):
             min_price = "N/A"
 
         return min_price

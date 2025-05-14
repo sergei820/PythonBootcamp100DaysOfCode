@@ -22,19 +22,22 @@ def start_app():
             flight["iataCode"] = flight_search.get_iata_code(flight["city"])
             data_manager.update_google_doc_record(flight)
 
-        flight_offers = flight_search.search_flight_offers(flight["iataCode"])
+        flight_offers = flight_search.search_flight_offers(iata_code=flight["iataCode"])
         min_price = flight_data.find_cheapest_flight(flight_offers)
 
         print(f"Getting flights for {flight["city"]}...")
         print(f"{flight["city"]}: £{min_price}")
 
-        if min_price != 'N/A' and float(min_price) < flight['lowestPrice']:
+        if min_price == 'N/A':
+            flight_offers = flight_search.search_flight_offers(iata_code=flight["iataCode"], flight_without_stops="false")
+            min_price = flight_data.find_cheapest_flight(flight_offers)
+            print(f"Getting connecting flights for {flight["city"]}...")
+            print(f"{flight["city"]}: £{min_price}")
+
+        elif float(min_price) < flight['lowestPrice']:
             message = f"Low Price alert! Flight to {flight["city"]}: £{min_price}"
             print(message)
             notification_manager.send_email(ADDR_TO, message)
-
-
-
 
 
 if __name__ == "__main__":

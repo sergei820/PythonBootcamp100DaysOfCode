@@ -7,7 +7,17 @@ html {
     background-color: black;
 }
 img {
-    border: 5px;
-    border-color: white;
-    align-self: center;
+    width: 50%;
+    margin-left: 25%;
+    border: 5px solid white;
+}
+div {
+    color: white;
+    margin-top: 30px;
+}
+h1 {
+    text-align: center;
+}
+p {
+    text-align: center;
 }

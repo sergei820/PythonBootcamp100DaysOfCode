@@ -6,7 +6,6 @@ URL = "https://web.archive.org/web/20200518073855/https://www.empireonline.com/m
 # Write your code below this line 👇
 
 def start_app():
-    # h3.title
     response = requests.get(url=URL)
 
     yc_webpage = response.text

@@ -1,7 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
+from os import environ
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+from dotenv import load_dotenv
+load_dotenv()
 
-
+spotify_client_id = environ.get("SPOTIFY_CLIENT_ID")
+spotify_client_secret = environ.get("SPOTIFY_CLIENT_SECRET")
+redirect_uri = "http://127.0.0.1:8888/callback"
 
 
 def start_app():
@@ -21,6 +28,18 @@ def start_app():
 
     for song in results:
         print(song.getText().strip())
+
+    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
+        client_id=spotify_client_id,
+        client_secret=spotify_client_secret,
+        redirect_uri=redirect_uri,
+        scope="playlist-modify-private"
+    ))
+
+    user_id = sp.current_user()["id"]
+    playlist = sp.user_playlist_create(user=user_id, name="My Private Playlist", public=False)
+
+    print("Created playlist:", playlist["name"])
 
 
 if __name__ == "__main__":

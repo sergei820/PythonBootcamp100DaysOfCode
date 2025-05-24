@@ -1,51 +1,20 @@
-import requests
-from bs4 import BeautifulSoup
-from os import environ
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from pprint import pprint
-from dotenv import load_dotenv
-
-load_dotenv()
-
-spotify_client_id = environ.get("SPOTIFY_CLIENT_ID")
-spotify_client_secret = environ.get("SPOTIFY_CLIENT_SECRET")
-redirect_uri = "http://127.0.0.1:8888/callback"
+from intermediate_plus.day_46_spotify_playlist_scraping.songs_collector import SongsCollector
+from intermediate_plus.day_46_spotify_playlist_scraping.spotify_manager import SpotifyManager
 
 
 def start_app():
-    user_date = "2000-08-12"  #  input("Which year do you want tot travel to? Type the date in this format YYYY-MM-DD:")
-    billboard_url = f"https://www.billboard.com/charts/hot-100/{user_date}"
+    user_date = input("Which year do you want to travel to? Type the date in this format YYYY-MM-DD: ")  # "2000-08-12"
+    songs_collector = SongsCollector(user_date)
+    spotify_manager = SpotifyManager()
 
-    headers = {
-        "User-Agent": (
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
-            "(KHTML, like Gecko) Version/18.4 Safari/605.1.15"
-        )
-    }
-    response = requests.get(url=billboard_url, headers=headers)
+    song_names_list = songs_collector.gather_song_names_list()
 
-    soup = BeautifulSoup(response.text, "html.parser")
-    results = soup.select("li > ul > li > h3")
+    songs_year = user_date.split("-")[0]
+    spotify_songs_links = spotify_manager.find_songs_links_in_spotify(song_names_list, songs_year)
 
-    for song in results:
-        print(song.getText().strip())
-
-    sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-        client_id=spotify_client_id,
-        client_secret=spotify_client_secret,
-        redirect_uri=redirect_uri,
-        scope="playlist-modify-private"
-    ))
-
-    user_id = sp.current_user()["id"]
-    playlist = sp.user_playlist_create(user=user_id, name="My Private Playlist", public=False)
-
-    print("Created playlist:", playlist["name"])
-
-    user_info = sp.current_user()
-    user_id = user_info["id"]
-    print(f"Spotify user ID is: {user_id}")
+    playlist_name = f"{user_date} Top Rated"
+    playlist_description = f"Top songs from {user_date} based on Billboard."
+    spotify_manager.create_spotify_playlist(playlist_name, playlist_description, spotify_songs_links)
 
 
 if __name__ == "__main__":

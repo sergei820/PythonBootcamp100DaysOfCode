@@ -3,7 +3,9 @@ from bs4 import BeautifulSoup
 from os import environ
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from pprint import pprint
 from dotenv import load_dotenv
+
 load_dotenv()
 
 spotify_client_id = environ.get("SPOTIFY_CLIENT_ID")
@@ -40,6 +42,10 @@ def start_app():
     playlist = sp.user_playlist_create(user=user_id, name="My Private Playlist", public=False)
 
     print("Created playlist:", playlist["name"])
+
+    user_info = sp.current_user()
+    user_id = user_info["id"]
+    print(f"Spotify user ID is: {user_id}")
 
 
 if __name__ == "__main__":

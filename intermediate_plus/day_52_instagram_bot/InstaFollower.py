@@ -25,9 +25,8 @@ instagram_target_account = instagram_base_url + target_account
 
 
 class InstaFollower:
-    def __init__(self):
-        self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(30)
+    def __init__(self, driver):
+        self.driver = driver
         self.target_followers_follow_buttons = None
 
     def login(self):

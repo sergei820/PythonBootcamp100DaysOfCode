@@ -23,7 +23,7 @@ def contact():
 
 @app.route('/post/<int:post_id>')
 def get_post(post_id):
-    post = all_posts[post_id]
+    post = all_posts[post_id-1]
     return render_template("post.html", post=post)
 
 

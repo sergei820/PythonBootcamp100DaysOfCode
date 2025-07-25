@@ -22,25 +22,26 @@ def start_app(text):
     print(f"{line1}\n{line2}\n{line3}")
 
 
-@report.step('REST: Confirm email')
-def confirm_email(self, email: str, user_id: int) -> BaseSignUpRest:
-    """
-    Confirm email by request for generated link
-
-    Hash generating and secret key taken from backend code
-
-    :param email: email Str
-    :param user_id: user id Int
-    :return: SignUpRest
-    """
-    json = {
-        'hash': str(hmac.new(b'secret', email.encode('utf-8'), sha1).hexdigest()),
-    }
-
-    self.session.post(self.verify_email_path.format(user_id), json=json)
-
-    return self
+# @report.step('REST: Confirm email')
+# def confirm_email(self, email: str, user_id: int) -> BaseSignUpRest:
+#     """
+#     Confirm email by request for generated link
+#
+#     Hash generating and secret key taken from backend code
+#
+#     :param email: email Str
+#     :param user_id: user id Int
+#     :return: SignUpRest
+#     """
+#     json = {
+#         'hash': str(hmac.new(b'secret', email.encode('utf-8'), sha1).hexdigest()),
+#     }
+#
+#     self.session.post(self.verify_email_path.format(user_id), json=json)
+#
+#     return self
 
 
 if __name__ == '__main__':
-    confirm_email()
+    # confirm_email()
+    pass

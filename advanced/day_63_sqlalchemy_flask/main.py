@@ -5,9 +5,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Float
 
 
-
-
-
 def try_sqlite():
     db = sqlite3.connect("books-collection.db")
     cursor = db.cursor()
@@ -22,7 +19,7 @@ def try_sqlalchemy():
 
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///new-books-collection.db"
 
-    ##CREATE DATABASE
+    # CREATE DATABASE
     class Base(DeclarativeBase):
         pass
 
@@ -31,7 +28,7 @@ def try_sqlalchemy():
     # Initialise the app with the extension
     db.init_app(app)
 
-    ##CREATE TABLE
+    # CREATE TABLE
     class Books(db.Model):
         id: Mapped[int] = mapped_column(Integer, primary_key=True)
         title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)

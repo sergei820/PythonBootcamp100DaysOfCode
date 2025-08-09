@@ -25,10 +25,28 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 Bootstrap5(app)
 
-# CREATE DB
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///top-movies-collection.db"
 
+# CREATE DB
+class Base(DeclarativeBase):
+    pass
+
+
+# Create the extension
+db = SQLAlchemy(model_class=Base)
+# Initialise the app with the extension
+db.init_app(app)
 
 # CREATE TABLE
+class Movies(db.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    title: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    year: Mapped[int] = mapped_column(Integer, nullable=False)
+    description: Mapped[str] = mapped_column(String(250), nullable=False)
+    rating: Mapped[float] = mapped_column(Float, nullable=False)
+    ranking: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    review: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    img_url: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
 
 
 @app.route("/")

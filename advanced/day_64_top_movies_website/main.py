@@ -49,28 +49,29 @@ class Movie(db.Model):
     review: Mapped[str] = mapped_column(String(250), nullable=False)
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
-# first_movie = Movie(
-#         title="Phone Booth",
-#         year=2002,
-#         description="Publicist Stuart Shepard finds himself trapped in a phone booth, pinned down by an extortionist's sniper rifle. Unable to leave or receive outside help, Stuart's negotiation with the caller leads to a jaw-dropping climax.",
-#         rating=7.3,
-#         ranking=1,
-#         review="My favourite character was the caller.",
-#         img_url="https://image.tmdb.org/t/p/w500/tjrX2oWRCM3Tvarz38zlZM7Uc10.jpg"
-#     )
-#
-# second_movie = Movie(
-#     title="Avatar The Way of Water",
-#     year=2022,
-#     description="Set more than a decade after the events of the first film, learn the story of the Sully family (Jake, Neytiri, and their kids), the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.",
-#     rating=7.3,
-#     ranking=2,
-#     review="I liked the water.",
-#     img_url="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg"
-# )
-#
-# with app.app_context():
-#     db.create_all()
+first_movie = Movie(
+        title=f"Phone Booth{randint(1, 1000)}",
+        year=2002,
+        description="Publicist Stuart Shepard finds himself trapped in a phone booth, pinned down by an extortionist's sniper rifle. Unable to leave or receive outside help, Stuart's negotiation with the caller leads to a jaw-dropping climax.",
+        rating=7.3,
+        ranking=1,
+        review="My favourite character was the caller.",
+        img_url="https://image.tmdb.org/t/p/w500/tjrX2oWRCM3Tvarz38zlZM7Uc10.jpg"
+    )
+
+second_movie = Movie(
+    title=f"Avatar The Way of Water{randint(1, 1000)}",
+    year=2022,
+    description="Set more than a decade after the events of the first film, learn the story of the Sully family (Jake, Neytiri, and their kids), the trouble that follows them, the lengths they go to keep each other safe, the battles they fight to stay alive, and the tragedies they endure.",
+    rating=7.3,
+    ranking=2,
+    review="I liked the water.",
+    img_url="https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg"
+)
+
+with app.app_context():
+    db.drop_all()
+    db.create_all()
 #
 # with app.app_context():
 #     db.session.add(first_movie)
@@ -98,11 +99,10 @@ def add_movie():
     data = {
         "title": f"Star Wars: A New Hope{randint(1, 1000)}",
         "release_date": "1977-05-25",
-        "poster_path": "./static/images/star_wars_a_new_hope.jpg",
+        "poster_path": url_for('static', filename="images/star_wars_a_new_hope.jpg"),
         "overview": "Luke Skywalker joins rebel forces..."
     }
 
-    # Get the next ranking number
     result = db.session.execute(db.select(Movie))
     all_movies = result.scalars().all()
     next_ranking = len(all_movies) + 1
@@ -112,9 +112,9 @@ def add_movie():
         year=int(data["release_date"].split("-")[0]),
         img_url=data["poster_path"],
         description=data["overview"],
-        rating=0.0,  # Default rating
-        ranking=next_ranking,  # Auto-increment ranking
-        review="No review yet"  # Default review
+        rating=0.0,
+        ranking=next_ranking,
+        review="No review yet"
     )
     db.session.add(new_movie)
     db.session.commit()

@@ -75,11 +75,30 @@ class Movie(db.Model):
 #    db.session.add(second_movie)
 #    db.session.commit()
 
+class RateMovieForm(FlaskForm):
+    rating = StringField("Your rating up to 10")
+    review = StringField("Your review")
+    submit = SubmitField("Done")
+
 @app.route("/")
 def home():
     result = db.session.execute(db.select(Movie))
-    all_movies = result.scalars().all()
+    all_movies = result.scalars()
     return render_template("index.html", movies=all_movies)
+
+@app.route("/edit", methods=["GET", "POST"])
+def edit():
+    form = RateMovieForm()
+    movie_id = request.args.get("id")
+    movie = db.get_or_404(Movie, movie_id)
+
+    if form.validate_on_submit():
+        movie.rating = float(form.rating.data)
+        movie.review = form.review.data
+        db.session.commit()
+
+        return redirect(url_for('home'))
+    return render_template("edit.html", id=movie_id, form=form)
 
 
 if __name__ == '__main__':

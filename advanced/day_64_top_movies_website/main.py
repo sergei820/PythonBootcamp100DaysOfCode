@@ -6,6 +6,7 @@ from sqlalchemy import Integer, String, Float
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+from random import randint
 import requests
 
 '''
@@ -46,7 +47,7 @@ class Movie(db.Model):
     rating: Mapped[float] = mapped_column(Float, nullable=False)
     ranking: Mapped[int] = mapped_column(Integer, unique=True, nullable=False)
     review: Mapped[str] = mapped_column(String(250), nullable=False)
-    img_url: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
+    img_url: Mapped[str] = mapped_column(String(250), nullable=False)
 
 # first_movie = Movie(
 #         title="Phone Booth",
@@ -95,7 +96,7 @@ def home():
 @app.route("/add", methods=["GET", "POST"])
 def add_movie():
     data = {
-        "title": "Star Wars: A New Hope",
+        "title": f"Star Wars: A New Hope{randint(1, 1000)}",
         "release_date": "1977-05-25",
         "poster_path": "./static/images/star_wars_a_new_hope.jpg",
         "overview": "Luke Skywalker joins rebel forces..."

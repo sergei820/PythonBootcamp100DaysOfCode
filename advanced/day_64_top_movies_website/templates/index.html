@@ -25,7 +25,10 @@
         <p class="overview">{{movie.description}}</p>
 
         <a href="{{ url_for('edit', id=movie.id) }}" class="button">Update</a>
-        <a href="#" class="button delete-button">Delete</a>
+        <form method="POST" action="{{ url_for('delete') }}" style="display: inline;">
+            <input type="hidden" name="movie_id" value="{{ movie.id }}">
+            <button type="submit" class="button delete-button" onclick="return confirm('Are you sure?')">Delete</button>
+        </form>
       </div>
     </div>
   </div>

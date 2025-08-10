@@ -81,11 +81,43 @@ class RateMovieForm(FlaskForm):
     review = StringField("Your review")
     submit = SubmitField("Done")
 
+class FindMovieForm(FlaskForm):
+    title = StringField("Movie Title", validators=[DataRequired()])
+    submit = SubmitField("Find Movie")
+
 @app.route("/")
 def home():
     result = db.session.execute(db.select(Movie))
     all_movies = result.scalars()
     return render_template("index.html", movies=all_movies)
+
+
+@app.route("/add", methods=["GET", "POST"])
+def add_movie():
+    data = {
+        "title": "Star Wars: A New Hope",
+        "release_date": "1977-05-25",
+        "poster_path": "./static/images/star_wars_a_new_hope.jpg",
+        "overview": "Luke Skywalker joins rebel forces..."
+    }
+
+    # Get the next ranking number
+    result = db.session.execute(db.select(Movie))
+    all_movies = result.scalars().all()
+    next_ranking = len(all_movies) + 1
+
+    new_movie = Movie(
+        title=data["title"],
+        year=int(data["release_date"].split("-")[0]),
+        img_url=data["poster_path"],
+        description=data["overview"],
+        rating=0.0,  # Default rating
+        ranking=next_ranking,  # Auto-increment ranking
+        review="No review yet"  # Default review
+    )
+    db.session.add(new_movie)
+    db.session.commit()
+    return redirect(url_for("edit", id=new_movie.id))
 
 @app.route("/edit", methods=["GET", "POST"])
 def edit():

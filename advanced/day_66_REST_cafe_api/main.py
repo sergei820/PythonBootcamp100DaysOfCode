@@ -2,19 +2,7 @@ from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Boolean
-
-'''
-Install the required packages first: 
-Open the Terminal in PyCharm (bottom left). 
-
-On Windows type:
-python -m pip install -r requirements.txt
-
-On MacOS type:
-pip3 install -r requirements.txt
-
-This will install the packages from requirements.txt for this project.
-'''
+from random import choice
 
 app = Flask(__name__)
 
@@ -27,7 +15,7 @@ db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
 
-# Cafe TABLE Configuration
+# Cafe TABLE
 class Cafe(db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(250), unique=True, nullable=False)
@@ -41,6 +29,9 @@ class Cafe(db.Model):
     can_take_calls: Mapped[bool] = mapped_column(Boolean, nullable=False)
     coffee_price: Mapped[str] = mapped_column(String(250), nullable=True)
 
+    def to_dict(self):
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
 
 with app.app_context():
     db.create_all()
@@ -50,14 +41,62 @@ with app.app_context():
 def home():
     return render_template("index.html")
 
+@app.route("/random")
+def get_random_cafe():
+    """Function to get a random cafe from the database"""
+    cafes = Cafe.query.all()
+    if cafes:
+        random_cafe = choice(cafes)
+        return jsonify(cafe={
+        "id": random_cafe.id,
+        "name": random_cafe.name,
+        "map_url": random_cafe.map_url,
+        "img_url": random_cafe.img_url,
+        "location": random_cafe.location,
+        "seats": random_cafe.seats,
+        "has_toilet": random_cafe.has_toilet,
+        "has_wifi": random_cafe.has_wifi,
+        "has_sockets": random_cafe.has_sockets,
+        "can_take_calls": random_cafe.can_take_calls,
+        "coffee_price": random_cafe.coffee_price,
+    })
+    return None
 
-# HTTP GET - Read Record
+@app.route("/all")
+def get_all_cafes():
+    """Function to get all cafes from the database"""
+    result = db.session.execute(db.select(Cafe).order_by(Cafe.name))
+    all_cafes = result.scalars().all()
+    return jsonify(cafes=[cafe.to_dict() for cafe in all_cafes])
 
-# HTTP POST - Create Record
+@app.route("/search")
+def search_cafe_by_location():
+    """Function to find a cafe by location"""
+    query_location = request.args.get("location")
+    result = db.session.execute(db.select(Cafe).where(Cafe.location == query_location))
+    all_cafes = result.scalars().all()
+    if all_cafes:
+        return jsonify(cafes=[cafe.to_dict() for cafe in all_cafes])
+    else:
+        return jsonify(error={"Not Found": "Sorry, we don't have a cafe at that location."}), 404
 
-# HTTP PUT/PATCH - Update Record
-
-# HTTP DELETE - Delete Record
+@app.route("/add", methods=["POST"])
+def post_new_cafe():
+    new_cafe = Cafe(
+        name=request.form.get("name"),
+        map_url=request.form.get("map_url"),
+        img_url=request.form.get("img_url"),
+        location=request.form.get("loc"),
+        has_sockets=bool(request.form.get("sockets")),
+        has_toilet=bool(request.form.get("toilet")),
+        has_wifi=bool(request.form.get("wifi")),
+        can_take_calls=bool(request.form.get("calls")),
+        seats=request.form.get("seats"),
+        coffee_price=request.form.get("coffee_price"),
+    )
+    db.session.add(new_cafe)
+    db.session.commit()
+    return jsonify(response={"success": "Successfully added the new cafe."})
 
 
 if __name__ == '__main__':

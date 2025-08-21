@@ -1,0 +1,5 @@
+Flask==3.0.0
+Werkzeug==3.0.3
+flask_sqlalchemy==3.1.1
+SQLAlchemy==2.0.32
+Flask-Login==0.6.3

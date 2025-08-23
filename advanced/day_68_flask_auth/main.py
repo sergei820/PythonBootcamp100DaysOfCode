@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
+from flask import Flask, jsonify, render_template, request, url_for, redirect, flash, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -38,13 +38,57 @@ def home():
     return render_template("index.html")
 
 
-@app.route('/register')
+@app.route('/register', methods=['GET', 'POST'])
 def register():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+
+        if not name or not email or not password:
+            flash("All fields are required!", "error")
+            return redirect(url_for('register'))
+
+        user_exists = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
+        if user_exists:
+            flash("Email already registered. Please log in.", "error")
+            return redirect(url_for('login'))
+
+        new_user = User(
+            email=request.form.get("email"),
+            password=request.form.get("password"),
+            name=request.form.get("name"),
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Account created! Please log in.", "success")
+        return redirect(url_for('login'))
+
     return render_template("register.html")
 
 
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+
+        if not email or not password:
+            flash("All fields are required!", "error")
+            return redirect(url_for('login'))
+
+        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
+        print(user.name)
+        if not user:
+            flash("User with this imail isn't registered.", "error")
+            return redirect(url_for('login'))
+        elif user.password != password:
+            flash("Wrong password.", "error")
+            return redirect(url_for('login'))
+        else:
+            return render_template('secrets.html', name=user.name)
+
+    # if GET /login
     return render_template("login.html")
 
 

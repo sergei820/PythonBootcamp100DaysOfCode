@@ -19,10 +19,17 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
-# CREATE TABLE IN DB
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Create a user_loader callback
+@login_manager.user_loader
+def load_user(user_id):
+    return db.get_or_404(User, user_id)
 
 
-class User(db.Model):
+# CREATE TABLE IN DB with the UserMixin
+class User(UserMixin, db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
@@ -54,15 +61,23 @@ def register():
             flash("Email already registered. Please log in.", "error")
             return redirect(url_for('login'))
 
+        hash_and_salted_password = generate_password_hash(
+        password,
+        method='pbkdf2:sha256',
+        salt_length=8
+        )
+
         new_user = User(
             email=request.form.get("email"),
-            password=request.form.get("password"),
+            password=hash_and_salted_password,
             name=request.form.get("name"),
         )
         db.session.add(new_user)
         db.session.commit()
-        flash("Account created! Please log in.", "success")
-        return redirect(url_for('login'))
+
+        # Log in and authenticate user after adding details to database.
+        login_user(new_user)
+        return redirect(url_for("secrets"))
 
     return render_template("register.html")
 
@@ -77,34 +92,37 @@ def login():
             flash("All fields are required!", "error")
             return redirect(url_for('login'))
 
-        user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
-        print(user.name)
-        if not user:
+        db_user = db.session.execute(db.select(User).filter_by(email=email)).scalar_one_or_none()
+
+        if not db_user:
             flash("User with this imail isn't registered.", "error")
             return redirect(url_for('login'))
-        elif user.password != password:
-            flash("Wrong password.", "error")
-            return redirect(url_for('login'))
         else:
-            return render_template('secrets.html', name=user.name)
+            if check_password_hash(db_user.password, password):
+                login_user(db_user)
+                return redirect(url_for('secrets'))
 
     # if GET /login
     return render_template("login.html")
 
 
 @app.route('/secrets')
+@login_required
 def secrets():
-    return render_template("secrets.html")
+    print(current_user.name)
+    return render_template("secrets.html", name=current_user.name)
 
 
 @app.route('/logout')
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('home'))
 
 
-@app.route('/download')
+@app.route('/download', methods=['GET'])
+@login_required
 def download():
-    pass
+    return send_from_directory('static/files', 'cheat_sheet.pdf', as_attachment=True)
 
 
 if __name__ == "__main__":

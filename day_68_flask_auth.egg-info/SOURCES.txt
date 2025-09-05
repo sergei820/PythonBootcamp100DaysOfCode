@@ -15,6 +15,10 @@ advanced/day_64_top_movies_website/main.py
 advanced/day_66_REST_cafe_api/main.py
 advanced/day_67_RESTful_routing_blog/main.py
 advanced/day_68_flask_auth/main.py
+advanced/day_69_blog_with_users/forms.py
+advanced/day_69_blog_with_users/main.py
+advanced/day_71_blog_deployment/forms.py
+advanced/day_71_blog_deployment/main.py
 beginner/check.py
 beginner/day_10_calculator.py
 beginner/day_11_blackjack.py
